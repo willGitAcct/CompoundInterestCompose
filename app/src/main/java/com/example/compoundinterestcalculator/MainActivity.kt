@@ -10,10 +10,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,6 +26,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.compoundinterestcalculator.ui.theme.CompoundInterestCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -92,6 +96,49 @@ fun Calc(){
             shape = RoundedCornerShape(8.dp),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),)
 
+        Text("Compound Frequency")
+        Row {
+            val checkedStateDaily = remember { mutableStateOf(false) }
+            Text("Daily", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
+
+            Checkbox(
+                checked = checkedStateDaily.value,
+                onCheckedChange = { checkedStateDaily.value = it },
+                modifier = Modifier.padding(2.dp),
+                colors = CheckboxDefaults.colors(Color.Blue)
+            )
+
+            val checkedStateWeekly = remember { mutableStateOf(false) }
+            Text("Weekly", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
+
+            Checkbox(
+                checked = checkedStateDaily.value,
+                onCheckedChange = { checkedStateDaily.value = it },
+                modifier = Modifier.padding(2.dp),
+                colors = CheckboxDefaults.colors(Color.Blue)
+            )
+
+            val checkedStateMonthly = remember { mutableStateOf(false) }
+            Text("Monthly", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
+
+            Checkbox(
+                checked = checkedStateDaily.value,
+                onCheckedChange = { checkedStateDaily.value = it },
+                modifier = Modifier.padding(2.dp),
+                colors = CheckboxDefaults.colors(Color.Blue)
+            )
+
+            val checkedStateAnnually = remember { mutableStateOf(false) }
+            Text("Yearly", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
+
+            Checkbox(
+                checked = checkedStateDaily.value,
+                onCheckedChange = { checkedStateDaily.value = it },
+                modifier = Modifier.padding(4.dp),
+                colors = CheckboxDefaults.colors(Color.Blue)
+            )
+        }
+
 
         Button(
             onClick = {
@@ -111,6 +158,7 @@ fun Calc(){
 
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
