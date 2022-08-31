@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -103,50 +104,20 @@ fun Calc(){
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),)
 
         Text("Compound Frequency")
-//        Row {
-//            val checkedStateDaily = remember { mutableStateOf(false) }
-//            Text("Daily", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
-//
-//            Checkbox(
-//                checked = checkedStateDaily.value,
-//                onCheckedChange = { checkedStateDaily.value = it },
-//                modifier = Modifier.padding(2.dp),
-//                colors = CheckboxDefaults.colors(Color.Blue)
-//            )
-//
-//            val checkedStateWeekly = remember { mutableStateOf(false) }
-//            Text("Weekly", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
-//
-//            Checkbox(
-//                checked = checkedStateWeekly.value,
-//                onCheckedChange = { checkedStateWeekly.value = it },
-//                modifier = Modifier.padding(2.dp),
-//                colors = CheckboxDefaults.colors(Color.Blue)
-//            )
-//
-//            val checkedStateMonthly = remember { mutableStateOf(false) }
-//            Text("Monthly", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
-//
-//            Checkbox(
-//                checked = checkedStateMonthly.value,
-//                onCheckedChange = { checkedStateMonthly.value = it },
-//                modifier = Modifier.padding(2.dp),
-//                colors = CheckboxDefaults.colors(Color.Blue)
-//            )
-//
-//            val checkedStateAnnually = remember { mutableStateOf(false) }
-//            Text("Yearly", modifier = Modifier.padding(2.dp), fontSize = 14.sp)
-//
-//            Checkbox(
-//                checked = checkedStateAnnually.value,
-//                onCheckedChange = { checkedStateAnnually.value = it },
-//                modifier = Modifier.padding(4.dp),
-//                colors = CheckboxDefaults.colors(Color.Blue)
-//            )
-//        }
-//
+
         val radioOptions = listOf("Daily", "Weekly", "Monthly", "Yearly")
         val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[3]) }
+        var compoundPeriod = 0
+        if (selectedOption.equals("Daily"))
+            compoundPeriod = 365
+        else if (selectedOption.equals("Weekly"))
+            compoundPeriod= 52
+        else if (selectedOption.equals("Monthly"))
+            compoundPeriod = 12
+        else
+            compoundPeriod = 1
+
+        var finalAmt: Double = 0.0
 
             Row {
                 // below line is use to set data to
@@ -165,8 +136,6 @@ fun Calc(){
 
 
                     ) {
-                        // below line is use to get context.
-                        val context = LocalContext.current
 
                         // below line is use to
                         // generate radio button
@@ -189,10 +158,35 @@ fun Calc(){
                             fontSize = 12.sp
                             //modifier = Modifier.padding(start = 16.dp)
                         )
-                    }}
+                    }}}
+                Text(text = "Your Projected total is: ")
+                var total = remember { mutableStateOf(0.0)}
+
+                Text("$"+"%.2f".format(total.value))
         Button(
             onClick = {
-                },
+                var principal: Int
+                var years: Int
+                var rates: Double
+                //var compound: Int
+
+                principal = Integer.parseInt(principalState.value.text)
+                years = Integer.parseInt(yearState.value.text)
+                rates = Integer.parseInt(interestState.value.text).toDouble()
+                //compound = Integer.parseInt(selectedOption)
+
+
+                    finalAmt = principal *(Math.pow((1+((rates/100)/compoundPeriod)),
+                        (compoundPeriod*years).toDouble()))
+                total.value = finalAmt
+                    println("%.2f".format(finalAmt))
+                println(rates)
+                println(years)
+                println(principal)
+                println(compoundPeriod)
+
+
+            },
             modifier = Modifier
                 .fillMaxWidth(),
             contentPadding = PaddingValues(16.dp),
@@ -204,17 +198,16 @@ fun Calc(){
                 text = "Calculate"
             )
 
-        }
+            }
 
-    }//end columnscope
 
-    fun Calculate(){
-        val principal: Int
-        val years: Int
-        val rates: Float
-        val compound: Boolean
-    }
-}}
+        }//end RowScope
+
+
+
+
+    }//end col
+
 
 
 @Preview(showBackground = true)
