@@ -52,117 +52,116 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Calc(){
+fun Calc() {
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ){
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        Alignment.CenterHorizontally
+    ) {
         Text(text = "Compound Interest Calculator!\nWatch how your investment can grow.")
 
         //principal
-        val principalState = remember{ mutableStateOf(TextFieldValue()) }
+        val principalState = remember { mutableStateOf(TextFieldValue()) }
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = principalState.value,
-            onValueChange = {principalState.value = it},
-            label = {Text(text= "Initial Amount")},
+            onValueChange = { principalState.value = it },
+            label = { Text(text = "Initial Amount") },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent),
+                unfocusedIndicatorColor = Color.Transparent
+            ),
             shape = RoundedCornerShape(8.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
 
         //years
-        val yearState = remember{ mutableStateOf(TextFieldValue()) }
+        val yearState = remember { mutableStateOf(TextFieldValue()) }
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = yearState.value,
-            onValueChange = {yearState.value = it},
-            label = {Text(text= "Investment Years")},
+            onValueChange = { yearState.value = it },
+            label = { Text(text = "Investment Years") },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(8.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number))
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+        )
 
         //interest rate
-        val interestState = remember{ mutableStateOf(TextFieldValue()) }
+        val interestState = remember { mutableStateOf(TextFieldValue()) }
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = interestState.value,
-            onValueChange = {interestState.value = it},
-            label = {Text(text= "Estimated Interest Rate")},
+            onValueChange = { interestState.value = it },
+            label = { Text(text = "Estimated Interest Rate") },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(8.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),)
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+        )
 
         Text("Compound Frequency")
 
-        val radioOptions = listOf("Daily", "Weekly", "Monthly", "Yearly")
+        val radioOptions = listOf("Daily", "Weekly", "Monthly", "Quarterly", "Yearly")
         val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[3]) }
         var compoundPeriod = 0
         if (selectedOption.equals("Daily"))
             compoundPeriod = 365
         else if (selectedOption.equals("Weekly"))
-            compoundPeriod= 52
+            compoundPeriod = 52
         else if (selectedOption.equals("Monthly"))
             compoundPeriod = 12
+        else if (selectedOption.equals("Quarterly"))
+            compoundPeriod = 4
         else
             compoundPeriod = 1
 
         var finalAmt: Double = 0.0
 
-            Row {
-                // below line is use to set data to
-                // each radio button in columns.
-                radioOptions.forEach { text ->
-                    Column(
-                        Modifier
-                            .selectable(
-                                // this method is called when
-                                // radio button is selected.
-                                selected = (text == selectedOption),
-                                // below method is called on
-                                // clicking of radio button.
-                                onClick = { onOptionSelected(text) }
-                            )
-
-
-                    ) {
-
-                        // below line is use to
-                        // generate radio button
-                        RadioButton(
-                            // inside this method we are
-                            // adding selected with a option.
+        Row {
+            // below line is use to set data to
+            // each radio button in columns.
+            radioOptions.forEach { text ->
+                Column(
+                    Modifier
+                        .selectable(
+                            // this method is called when
+                            // radio button is selected.
                             selected = (text == selectedOption),
 
-                            onClick = {
-                                // inside on click method we are setting a
-                                // selected option of our radio buttons.
-                                onOptionSelected(text)
-
-                            }
+                            onClick = { onOptionSelected(text) }
                         )
-                        // below line is use to add
-                        // text to our radio buttons.
-                        Text(
-                            text = text,
-                            fontSize = 12.sp
-                            //modifier = Modifier.padding(start = 16.dp)
-                        )
-                    }}}
-                Text(text = "Your Projected total is: ")
-                var total = remember { mutableStateOf(0.0)}
 
-                Text("$"+"%.2f".format(total.value))
+
+                ) {
+
+                    //generate Radio buttons
+                    RadioButton(
+                        selected = (text == selectedOption),
+                        onClick = {
+                            onOptionSelected(text)
+                        })
+
+                    Text(
+                        text = text,
+                        fontSize = 12.sp
+                        //modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+            }
+        }
+        Text(text = "Your Projected total is: ")
+        var total = remember { mutableStateOf(0.0) }
+
+        Text(text = "$" + "%.2f".format(total.value), fontSize = 28.sp)
         Button(
             onClick = {
                 var principal: Int
@@ -172,14 +171,17 @@ fun Calc(){
 
                 principal = Integer.parseInt(principalState.value.text)
                 years = Integer.parseInt(yearState.value.text)
-                rates = Integer.parseInt(interestState.value.text).toDouble()
+                rates = interestState.value.text.toDouble()
                 //compound = Integer.parseInt(selectedOption)
 
 
-                    finalAmt = principal *(Math.pow((1+((rates/100)/compoundPeriod)),
-                        (compoundPeriod*years).toDouble()))
+                //*** calculation***
+                finalAmt = principal * (Math.pow(
+                    (1 + ((rates / 100) / compoundPeriod)),
+                    (compoundPeriod * years).toDouble()
+                ))
                 total.value = finalAmt
-                    println("%.2f".format(finalAmt))
+                println("%.2f".format(finalAmt))
                 println(rates)
                 println(years)
                 println(principal)
@@ -191,26 +193,23 @@ fun Calc(){
                 .fillMaxWidth(),
             contentPadding = PaddingValues(16.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color( 0xFF4974a5),
+                backgroundColor = Color(0xFF4974a5),
                 contentColor = Color.White
-            ) ) {
+            )
+        ) {
             Text(
                 text = "Calculate"
             )
 
-            }
-
-
-        }//end RowScope
-
-
+        }
 
 
     }//end col
 
 
+}
 
-@Preview(showBackground = true)
+    @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     CompoundInterestCalculatorTheme {
